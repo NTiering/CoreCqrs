@@ -1,8 +1,10 @@
-﻿namespace Core.Events.Widget;
+﻿using Core.Commands.Commands.Widgets;
 
-public class LogWidgetAdded : BaseEventHandler<AddWidget.Result>
+namespace Core.Events.Widget;
+
+public class LogWidgetAdded : BaseEventHandler<AddWidgetResult>
 {
-    protected override Task Handle(AddWidget.Result payload, CancellationToken cancellationToken)
+    protected override Task Handle(AddWidgetResult payload, CancellationToken cancellationToken)
     {
         Console.WriteLine(payload?.Data?.Name);
         return Task.CompletedTask;

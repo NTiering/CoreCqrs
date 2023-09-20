@@ -36,7 +36,7 @@ public class BaseQueryHandlerTest
     }
 
     [Test]
-    public async Task HandlerTimesQuries()
+    public async Task HandlerTimesQueries()
     {
         // arrange 
         var delayInMs = 100;
@@ -58,7 +58,7 @@ public class BaseQueryHandlerTest
     //  ----------------------------------------------------
 
     private static Mock<ILogger<TestQuery.Query>> MockLogger => new();
-    private static TestQuery.Query Query = new();
+    private static TestQuery.Query Query => new();
 
     public class TestQuery
     {

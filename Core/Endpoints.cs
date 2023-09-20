@@ -1,5 +1,5 @@
-﻿using Core.Commands.Commands;
-using Core.Queries.Queries;
+﻿using Core.Commands.Commands.Widgets;
+using Core.Queries.Queries.Widgets;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +19,7 @@ public static class Endpoints
         {
             app.MapPost("/Core/AddWidget", async (HttpContext httpContext, IMediator mediator, [FromBody] string message) =>
             {
-                var result = await mediator.Send(new Commands.Commands.AddWidget.Command(message));
+                var result = await mediator.Send(new AddWidgetCommand(message));
                 var rtn = result.Format(httpContext.Request.Method);
                 return rtn;
             })
@@ -35,7 +35,7 @@ public static class Endpoints
         {
             app.MapGet("/Core/GetWidget", async (HttpContext httpContext, IMediator mediator) =>
             {
-                var result = await mediator.Send(new GetWidget.Query());
+                var result = await mediator.Send(new GetWidgetQuery());
                 var rtn = result.Format();
                 return rtn;
             })
