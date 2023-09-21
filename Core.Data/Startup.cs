@@ -1,17 +1,18 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Core.Sidecar;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Scrutor;
 
 namespace Core.Data;
 
-public static class Startup
+public class Startup : IStartup
 {
-    public static void Main(IApplicationBuilder app)
+    public void Main(IApplicationBuilder app)
     {
 
     }
 
-    public static void Main(IServiceCollection services)
+    public void Main(IServiceCollection services)
     {
         services.Scan(scan =>
         scan.FromAssembliesOf(typeof(Startup))

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -15,6 +15,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Core.Commands\Core.Commands.csproj" />
 	  <ProjectReference Include="..\Core.Data\Core.Data.csproj" />
+	  <ProjectReference Include="..\Core.Sidecar\Core.Sidecar.csproj" />
 	</ItemGroup>
 
 

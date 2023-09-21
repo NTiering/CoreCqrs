@@ -12,7 +12,7 @@ public class AddWidgetHandler : BaseCommandHandler<AddWidgetCommand, AddWidgetRe
     { }
 
     protected override Task<AddWidgetResult> HandleCommand(AddWidgetCommand request, AddWidgetResult result, CancellationToken cancellationToken)
-    {
+    {        
         result.Data = new Widget { Name = request.Name };
         return Task.FromResult(result);
     }

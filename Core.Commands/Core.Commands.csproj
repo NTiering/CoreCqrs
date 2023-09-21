@@ -17,6 +17,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Core.Data\Core.Data.csproj" />
+	  <ProjectReference Include="..\Core.Sidecar\Core.Sidecar.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -1,51 +1,52 @@
-namespace Core
+using Core.Ext;
+
+namespace Core;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var startUpCollection = new[] {
+            typeof(Queries.Startup),
+            typeof(Commands.Startup),
+            typeof(Data.Startup),
+            typeof(Events.Startup),
+        };
+
+        var builder = WebApplication.CreateBuilder(args);
+  
+        builder.Services.AddAuthorization();          
+
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(options =>
         {
-            var builder = WebApplication.CreateBuilder(args);
+            options.CustomSchemaIds(type => type.ToString().Replace(" ",string.Empty).Replace("+",string.Empty));
+        });
+        builder.Services.AddLogging();
 
-            // Add services to the container.
-            builder.Services.AddAuthorization();
+        builder.Services.AddStartupServives(startUpCollection);
+        
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(options =>
-            {
-                options.CustomSchemaIds(type => type.ToString().Replace(" ",string.Empty).Replace("+",string.Empty));
-            });
-            builder.Services.AddLogging();
+        var app = builder.Build();
 
-            Queries.Startup.Main(builder.Services);
-            Commands.Startup.Main(builder.Services);
-            Data.Startup.Main(builder.Services);
-            Events.Startup.Main(builder.Services);
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();          
-
-            Queries.Startup.Main(app);
-            Commands.Startup.Main(app);
-            Data.Startup.Main(app);
-            Events.Startup.Main(app);
-
-
-            app.AddEndpoints(
-                IsDevelopment : app.Environment.IsDevelopment(),  
-                EnviromentName : app.Environment.EnvironmentName); 
-
-            app.Run();
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
+
+        app.UseHttpsRedirection();
+
+        app.UseAuthorization();
+
+        app.AddStartupServives(startUpCollection);    
+
+        app.AddEndpoints(
+            IsDevelopment : app.Environment.IsDevelopment(),  
+            EnviromentName : app.Environment.EnvironmentName); 
+
+        app.Run();
     }
 }

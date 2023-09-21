@@ -13,4 +13,8 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
 		<PackageReference Include="Scutor.AspnetCore.Wireup" Version="1.0.0" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Core.Sidecar\Core.Sidecar.csproj" />
+	</ItemGroup>
 </Project>

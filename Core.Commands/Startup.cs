@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Core.Sidecar;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Commands;
 
-public static class Startup
+public class Startup : IStartup
 {
-    public static void Main(IApplicationBuilder app)
+    public void Main(IApplicationBuilder app)
     {
 
     }
 
-    public static void Main(IServiceCollection services)
+    public void Main(IServiceCollection services)
     {
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).Assembly));
         services.AddValidatorsFromAssemblyContaining(typeof(Startup));

@@ -17,7 +17,7 @@ public static class Endpoints
     {
         if (IsDevelopment)
         {
-            app.MapPost("/Core/AddWidget", async (HttpContext httpContext, IMediator mediator, [FromBody] string message) =>
+            app.MapPost("/Widgets", async (HttpContext httpContext, IMediator mediator, [FromBody] string message) =>
             {
                 var result = await mediator.Send(new AddWidgetCommand(message));
                 var rtn = result.Format(httpContext.Request.Method);
@@ -33,7 +33,7 @@ public static class Endpoints
     {
         if (IsDevelopment)
         {
-            app.MapGet("/Core/GetWidget", async (HttpContext httpContext, IMediator mediator) =>
+            app.MapGet("/Widgets", async (HttpContext httpContext, IMediator mediator) =>
             {
                 var result = await mediator.Send(new GetWidgetQuery());
                 var rtn = result.Format();
