@@ -3,61 +3,116 @@
 
 A starting point for dotnet projects that use minimal api and mediatr asa CQRS platform. Designed to allow expansion without a steep learning curve.
 
-# Quick start
 
-## Adding a new Query endpoint 
+Events are also raised after command completion 
 
-### 1) Add a new CQRS query (see [this](https://github.com/NTiering/CoreCqrs/blob/main/Core.Queries/Queries/GetWidget.cs))
+## Core Features 
+* Separation of concerns (API, Queries, Commands & event handlers)
+* Shallow learning curve.
+* Built in post-command event
+* built in query / command duration logging    
 
-### 2) Create a Query class (to transmit the query params) 
-```
- public class Query : BaseQuery<Result>
- { 
-     public string Param1 {get;set;}
-     public string Param2 {get;set;}
- }
-```
-### 3) Create a Result class (to transmit the resultset)
-```
-public class Result : BaseQueryResult
+## Installation
+Use the solution [file](https://github.com/NTiering/CoreCqrs/blob/main/Core/Core.sln) 
+
+You'll need [docker](https://www.docker.com/)
+
+And dotnet [7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) or later
+
+## How it works
+
+### Running a query 
+
+**Api endpoint → Query → QueryHandler → QueryResult →  Api endpoint**
+
+### Running a command
+
+**Api endpoint → Command → CommandValidator → CommandHandler → CommandResult →  Api endpoint**
+
+simple eh ? 
+
+### Making a new query
+1. [Add a new Endpoint](./readme.md#Add_a_new_endpoint)
+2. [Add a new Query Result](./readme.md#Add_a_new_query_result)
+3. [Add a new Query](./readme.md#Add_a_new_query)
+4. [Add a new Query Handler](./readme.md#Add_a_new_query_handler)
+
+Everything should be automatically registered
+
+### Add_a_new_endpoint
+
+Add a new [query endpoint](https://github.com/NTiering/CoreCqrs/blob/main/Core/Endpoints.cs) to the AddQueries method 
+```csharp
+app.MapGet("/<my endpoint>", async (HttpContext httpContext, IMediator mediator) =>
 {
-    public DataSet? MyDataset { get; set; } // this will carry the results
+       var result = await mediator.Send(new <my query>());
+       var rtn = result.Format();
+       return rtn;
+       })
+      .WithName("<my query name>")
+     .WithOpenApi();
 }
 ```
-### 4) Create a Handler class (with a HandleQuery method) to 'do the work'
-```
-public class Handler : BaseQueryHandler<Query, Result>
+### Add_a_new_query_result
+
+Add a new [query result](https://github.com/NTiering/CoreCqrs/blob/main/Core.Queries/Queries/Widgets/GetWidgetResult.cs) that inherits from **BaseQueryResult** in a folder below **/Core.Queries/Queries/** 
+
+```csharp
+﻿using Core.Data.Datamodels;
+
+namespace Core.Queries.Queries.<my query>;
+
+public class <my query>: BaseQueryResult
 {
-    public Handler(ILogger<Query> logger)
-        :base(logger) 
+    // properties to carry result values
+}
+```
+
+### Add_a_new_query
+
+Add a new [query](https://github.com/NTiering/CoreCqrs/blob/main/Core.Queries/Queries/Widgets/GetWidgetQuery.cs) that inherits from **BaseQuery**  in a folder below **/Core.Queries/Queries/** 
+
+```csharp
+﻿namespace Core.Queries.Queries.<my query>;
+
+public class <my query>: BaseQuery<my query result> { }
+```
+
+### Add_a_new_query_handler
+
+Add a new [query handler](https://github.com/NTiering/CoreCqrs/blob/main/Core.Queries/Queries/Widgets/GetWidgetHandler.cs) that inherits from BaseQueryHandler in a folder below **/Core.Queries/Queries/** 
+
+```csharp
+﻿using Core.Data.Datamodels;
+using Microsoft.Extensions.Logging;
+
+﻿namespace Core.Queries.Queries.<my query>;
+
+public class <my query handler>: BaseQueryHandler<<my query>, <my query result>>
+{
+    public GetWidgetHandler(ILogger<<my query>> logger)
+        : base(logger)
     {
-        
+
     }
 
-    protected override Task HandleQuery(Query query, Result result, CancellationToken cancellationToken)
+    protected override Task HandleQuery(<my query>query, 
+                                        <my query result> result, 
+                                        CancellationToken cancellationToken)
     {
-        /* Do the query here, put the results in the results object 
-        E.G. result.DataSet = GetDataSet(query.Param2,query.Param2)
-            */
+        // do your work here
     }
 }
 ```
-### 5) Add a new endpoint (see [this](https://github.com/NTiering/CoreCqrs/blob/main/Core/Endpoints.cs)) 
-
-```
-app.MapGet("<my endpoint>", async (HttpContext httpContext, IMediator mediator) =>
-            {
-                var result = await mediator.Send(new <My Query>.Query());
-                var rtn = result.Format();
-                return rtn;
-            })
-             .WithName("<my endpoint name>")
-            .WithOpenApi();
-```
-
-Everything should be automatically detected and run.
 
 
-## Adding a new Command endpoint 
+## Contributing
 
-### 1) Add a new CQRS command (see https://github.com/NTiering/CoreCqrs/blob/main/Core.Commands/Commands/AddWidget.cs)
+Pull requests are welcome. For major changes, please open an issue first
+to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
