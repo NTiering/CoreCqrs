@@ -32,10 +32,10 @@ And dotnet [7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) or late
 simple eh ? 
 
 ### Making a new query
-1. [Add a new Endpoint](./readme.md#Add_a_new_endpoint)
-2. [Add a new Query Result](./readme.md#Add_a_new_query_result)
-3. [Add a new Query](./readme.md#Add_a_new_query)
-4. [Add a new Query Handler](./readme.md#Add_a_new_query_handler)
+1. Add a new Endpoint
+2. Add a new Query Result
+3. Add a new Query
+4. Add a new Query Handler
 
 Everything should be automatically registered
 
@@ -105,7 +105,27 @@ public class <my query handler>: BaseQueryHandler<<my query>, <my query result>>
 }
 ```
 
+### Making a new command
+Add a new Endpoint
+Add a new Command Result
+Add a new Command
+Add a new Command Validator
+Add a new Command Handler
+Everything should be automatically registered
 
+
+Add a new [command endpoint](https://github.com/NTiering/CoreCqrs/blob/main/Core/Endpoints.cs) to the AddCommands method 
+```csharp
+app.mapPost("/<my endpoint>", async (HttpContext httpContext, IMediator mediator) =>
+{
+       var result = await mediator.Send(new <my command>());
+       var rtn = result.Format();
+       return rtn;
+       })
+      .WithName("<my command name>")
+     .WithOpenApi();
+}
+```
 
 
 ## Contributing
