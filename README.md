@@ -1,7 +1,7 @@
 
 # CoreCqrs
 
-A starting point for dotnet projects that use minimal api and mediatr asa CQRS platform. Designed to allow expansion without a steep learning curve.
+A starting point for dotnet projects that use minimal api and mediatr as a CQRS platform. Designed to allow expansion without a steep learning curve.
 
 
 Events are also raised after command completion 
@@ -104,6 +104,8 @@ public class <my query handler>: BaseQueryHandler<<my query>, <my query result>>
     }
 }
 ```
+
+
 
 
 ## Contributing
