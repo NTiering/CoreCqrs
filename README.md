@@ -126,6 +126,80 @@ app.mapPost("/<my endpoint>", async (HttpContext httpContext, IMediator mediator
      .WithOpenApi();
 }
 ```
+Add a new Command Result
+
+Add a new [command result](https://github.com/NTiering/CoreCqrs/blob/main/Core.Commands/Commands/Widgets/AddWidgetResult.cs) that inherits from **BaseComandResult** in a folder below **/Core.Commands/Commands/** 
+
+```csharp
+﻿using Core.Data.Datamodels;
+
+namespace Core.Commands.Commands.<my command>;
+
+public class <my command>: BaseComandResult
+{
+    // properties to carry result values
+}
+```
+
+Add a new Command
+
+Add a new [command](https://github.com/NTiering/CoreCqrs/blob/main/Core.Commands/Commands/Widgets/AddWidgetCommand.cs) record that inherits from **BaseComandR** in a folder below **/Core.Commands/Commands/** 
+
+```csharp
+﻿namespace Core.Commands.Commands.Widgets;
+
+/// <summary>
+/// Command used to pass in values 
+/// </summary>
+/// <param name="Name"></param>
+public record my command(string Name) : BaseCommand<My command result>;
+```
+
+Add a new Command Validator 
+
+Add a new [validator](https://github.com/NTiering/CoreCqrs/blob/main/Core.Commands/Commands/Widgets/AddWidgetValidator.cs) class that inherits from **AbstractValidator** in a folder below **/Core.Commands/Commands/**
+This uses FluentValidation to enforce rules 
+
+```csharp
+﻿namespace Core.Commands.Commands.Widgets;
+
+/// <summary>
+/// Ensures the correctness of the values passed in
+/// </summary>
+public class <my command>Validator : AbstractValidator<my command>
+{
+    public  <my command>Validator()
+    {
+        RuleFor(x => x.Name).NotEmpty().WithErrorCode("bad-1");
+    }
+}
+```
+
+Add a new Command Handler 
+
+Add a new [handler ](https://github.com/NTiering/CoreCqrs/blob/main/Core.Commands/Commands/Widgets/AddWidgetHandler.css) class that inherits from **BaseCommandHandler** in a folder below **/Core.Commands/Commands/**
+This uses FluentValidation to enforce rules 
+
+```csharp
+﻿using Microsoft.Extensions.Logging;
+
+namespace Core.Commands.Commands.Widgets;
+
+/// <summary>
+/// Executes the operation on the values in the command
+/// </summary>
+public class <my command>Handler : BaseCommandHandler<<my command>Command, <my command>Result>
+{
+    public <my command>Handler(IValidator<AddWidgetCommand> validator, ILogger<AddWidgetHandler> logger, IMediator mediator)
+        : base(validator, logger, mediator)
+    { }
+
+    protected override Task<<my command>Result> HandleCommand(<my command> request, <my command>Result result, CancellationToken cancellationToken)
+    {        
+        // do work
+    }
+}
+```
 
 
 ## Contributing
