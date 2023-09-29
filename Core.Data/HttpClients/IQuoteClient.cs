@@ -1,4 +1,4 @@
-﻿namespace Core.Queries.Support.HttpClients
+﻿namespace Core.Data.HttpClients
 {
     public interface IQuoteClient
     {

@@ -1,10 +1,8 @@
-﻿using Core.Data.Support;
-using Core.Queries.Support.HttpClients;
-using Core.Sidecar;
+﻿using Core.Sidecar;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using static Core.Data.Support.HttpClientPolicyFactory;
+
 
 namespace Core.Queries;
 
@@ -19,10 +17,7 @@ public class Startup : IStartup
     {
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).Assembly));
 
-        services.Configure<Configuration>(configuration);
-
-        services.AddHttpClient<IQuoteClient, QuoteClient>()
-        .AddPolicyHandler(RetryPolicy());
+        services.Configure<Configuration>(configuration);     
 
         services.Scan(scan =>
         scan.FromAssembliesOf(typeof(Startup))

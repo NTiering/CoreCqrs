@@ -1,5 +1,4 @@
-﻿using Core.Data.Datamodels;
-using Core.Queries.Support.HttpClients;
+﻿using Core.Data.HttpClients;
 using Microsoft.Extensions.Logging;
 
 namespace Core.Queries.Queries.ApiConsume;

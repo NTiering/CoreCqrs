@@ -9,7 +9,7 @@ public class Program
     public static void Main(string[] args)
     {
         var startUpCollection = new[] {
-            typeof(Startup),
+            typeof(Queries.Startup),
             typeof(Commands.Startup),
             typeof(Data.Startup),
             typeof(Events.Startup),
