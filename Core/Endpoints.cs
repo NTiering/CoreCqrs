@@ -1,4 +1,5 @@
 ﻿using Core.Commands.Commands.Widgets;
+using Core.Queries.Queries.ApiConsume;
 using Core.Queries.Queries.Widgets;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,15 @@ public static class Endpoints
                 return rtn;
             })
              .WithName("CoreGetWidget")
+            .WithOpenApi();
+
+            app.MapGet("/ApiConsume", async (HttpContext httpContext, IMediator mediator) =>
+            {
+                var result = await mediator.Send(new ApiConsumeQuery());
+                var rtn = result.Format();
+                return rtn;
+            })
+             .WithName("ApiConsume")
             .WithOpenApi();
         }
 

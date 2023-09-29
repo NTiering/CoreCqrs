@@ -1,4 +1,6 @@
+using Core.Events;
 using Core.Ext;
+using static Poly.Net.Http.Server;
 
 namespace Core;
 
@@ -7,7 +9,7 @@ public class Program
     public static void Main(string[] args)
     {
         var startUpCollection = new[] {
-            typeof(Queries.Startup),
+            typeof(Startup),
             typeof(Commands.Startup),
             typeof(Data.Startup),
             typeof(Events.Startup),
@@ -15,9 +17,7 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
   
-        builder.Services.AddAuthorization();          
-
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddAuthorization();  
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
@@ -25,12 +25,12 @@ public class Program
         });
         builder.Services.AddLogging();
 
-        builder.Services.AddStartupServives(startUpCollection);
-        
+        builder.Services.AddStartupServives(startUpCollection, builder.Configuration);
+
+       
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -48,5 +48,16 @@ public class Program
             EnviromentName : app.Environment.EnvironmentName); 
 
         app.Run();
+    }
+
+    public class StorageOptions
+    {
+        public String StorageConnectionString { get; set; }
+        public String AccountName { get; set; }
+        public String AccountKey { get; set; }
+        public String DefaultEndpointsProtocol { get; set; }
+        public String EndpointSuffix { get; set; }
+
+        public StorageOptions() { }
     }
 }
