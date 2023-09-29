@@ -106,11 +106,12 @@ public class <my query handler>: BaseQueryHandler<<my query>, <my query result>>
 ```
 
 ### Making a new command
-Add a new Endpoint
-Add a new Command Result
-Add a new Command
-Add a new Command Validator
-Add a new Command Handler
+1. Add a new Endpoint
+2. Add a new Command Result
+3. Add a new Command
+4. Add a new Command Validator
+5. Add a new Command Handler
+
 Everything should be automatically registered
 
 
