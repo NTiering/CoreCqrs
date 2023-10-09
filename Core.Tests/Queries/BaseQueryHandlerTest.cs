@@ -1,21 +1,16 @@
 ﻿using Core.Queries.Support;
-using Microsoft.Extensions.Logging;
+
 
 namespace Core.Tests.Queries;
 
 
 public class BaseQueryHandlerTest
-{
-
-    [SetUp]
-    public void Setup()
-    {
-    }
+{   
 
     [Test]
     public void HandlerCanBeConstructed()
     {
-        new TestQuery.Handler(MockLogger.Object)
+        new TestQuery.Handler(Logger)
           .Should()
           .NotBeNull();
     }
@@ -24,7 +19,7 @@ public class BaseQueryHandlerTest
     public async Task HandlerCanHandleQueries()
     {
         // arrange 
-        var hdlr = new TestQuery.Handler(MockLogger.Object);
+        var hdlr = new TestQuery.Handler(Logger);
         var qry = Query;
 
         // act 
@@ -40,8 +35,10 @@ public class BaseQueryHandlerTest
     {
         // arrange 
         var delayInMs = 100;
-        var hdlr = new TestQuery.Handler(MockLogger.Object);
-        hdlr.DelayinMs = delayInMs;
+        var hdlr = new TestQuery.Handler(Logger)
+        {
+            DelayinMs = delayInMs
+        };
 
         // act 
         var result = await hdlr.Handle(Query, CancellationToken.None);
@@ -57,7 +54,9 @@ public class BaseQueryHandlerTest
     // --------------    Helpers                -------------
     //  ----------------------------------------------------
 
-    private static Mock<ILogger<TestQuery.Query>> MockLogger => new();
+    private static IMediator Mediator => Substitute.For<IMediator>();
+    private static ILogger<TestQuery.Query> Logger => Substitute.For<ILogger<TestQuery.Query>>();
+
     private static TestQuery.Query Query => new();
 
     public class TestQuery
