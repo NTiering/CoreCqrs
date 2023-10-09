@@ -1,5 +1,8 @@
 using Core.Events;
 using Core.Ext;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using static Poly.Net.Http.Server;
 
 namespace Core;
@@ -15,9 +18,8 @@ public class Program
             typeof(Events.Startup),
         };
 
-        var builder = WebApplication.CreateBuilder(args);
-  
-        builder.Services.AddAuthorization();  
+        var builder = WebApplication.CreateBuilder(args);  
+    
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
@@ -27,9 +29,29 @@ public class Program
 
         builder.Services.AddStartupServives(startUpCollection, builder.Configuration);
 
-       
+        builder.Services.AddAuthentication(o =>
+        {
+            o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(o =>
+        {
+            o.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = false,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            };
+        });
+        builder.Services.AddAuthorization();
 
         var app = builder.Build();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         if (app.Environment.IsDevelopment())
         {
@@ -38,8 +60,6 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-
-        app.UseAuthorization();
 
         app.AddStartupServives(startUpCollection);    
 
