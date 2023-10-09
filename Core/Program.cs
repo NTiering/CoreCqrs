@@ -1,9 +1,8 @@
-using Core.Events;
 using Core.Ext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
-using static Poly.Net.Http.Server;
 
 namespace Core;
 
@@ -18,12 +17,40 @@ public class Program
             typeof(Events.Startup),
         };
 
-        var builder = WebApplication.CreateBuilder(args);  
-    
+        var builder = WebApplication.CreateBuilder(args);
+
         builder.Services.AddEndpointsApiExplorer();
+
+        var securityScheme = new OpenApiSecurityScheme()
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "JSON Web Token based security",
+        };
+        var securityReq = new OpenApiSecurityRequirement()
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        };
+
         builder.Services.AddSwaggerGen(options =>
         {
-            options.CustomSchemaIds(type => type.ToString().Replace(" ",string.Empty).Replace("+",string.Empty));
+            options.CustomSchemaIds(type => type.ToString().Replace(" ", string.Empty).Replace("+", string.Empty));
+            options.AddSecurityDefinition("Bearer", securityScheme);
+            options.AddSecurityRequirement(securityReq);
+
         });
         builder.Services.AddLogging();
 
@@ -61,13 +88,13 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        app.AddStartupServives(startUpCollection);    
+        app.AddStartupServives(startUpCollection);
 
         app.AddEndpoints(
-            configuration : builder.Configuration,
-            isDevelopment : app.Environment.IsDevelopment(),  
-            enviromentName : app.Environment.EnvironmentName); 
+            configuration: builder.Configuration,
+            isDevelopment: app.Environment.IsDevelopment(),
+            enviromentName: app.Environment.EnvironmentName);
 
         app.Run();
-    }    
+    }
 }
