@@ -44,20 +44,10 @@ public class Program
         app.AddStartupServives(startUpCollection);    
 
         app.AddEndpoints(
-            IsDevelopment : app.Environment.IsDevelopment(),  
-            EnviromentName : app.Environment.EnvironmentName); 
+            configuration : builder.Configuration,
+            isDevelopment : app.Environment.IsDevelopment(),  
+            enviromentName : app.Environment.EnvironmentName); 
 
         app.Run();
-    }
-
-    public class StorageOptions
-    {
-        public String StorageConnectionString { get; set; }
-        public String AccountName { get; set; }
-        public String AccountKey { get; set; }
-        public String DefaultEndpointsProtocol { get; set; }
-        public String EndpointSuffix { get; set; }
-
-        public StorageOptions() { }
-    }
+    }    
 }

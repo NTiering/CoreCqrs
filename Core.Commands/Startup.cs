@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Commands;
 
-public class Startup : IStartup
+public partial class Startup : IStartup
 {
     public void Main(IApplicationBuilder app)
     {

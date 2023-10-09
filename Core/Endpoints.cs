@@ -4,19 +4,25 @@ using Core.Queries.Queries.Widgets;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace Core;
 
 public static class Endpoints
 {
-    public static void AddEndpoints(this WebApplication app, bool IsDevelopment, string EnviromentName)
+    public static class Tags
     {
-        AddQueries(app,IsDevelopment,EnviromentName);
-        AddCommands(app, IsDevelopment, EnviromentName);
+        public static string Demo => nameof(Demo);
     }
 
-    private static void AddCommands(WebApplication app, bool IsDevelopment, string EnviromentName)
+    public static void AddEndpoints(this WebApplication app, bool isDevelopment, ConfigurationManager configuration, string enviromentName)
     {
-        if (IsDevelopment)
+        AddQueries(app, isDevelopment, configuration, enviromentName);
+        AddCommands(app, isDevelopment, configuration, enviromentName);
+    }
+
+    private static void AddCommands(WebApplication app, bool isDevelopment, ConfigurationManager configuration, string enviromentName)
+    {
+        if (isDevelopment)
         {
             app.MapPost("/Widgets", async (HttpContext httpContext, IMediator mediator, [FromBody] string message) =>
             {
@@ -24,15 +30,15 @@ public static class Endpoints
                 var rtn = result.Format(httpContext.Request.Method);
                 return rtn;
             })
-             .WithName("CoreAddWidget")
+            .WithName("CoreAddWidget")
+            .WithTags(Tags.Demo)
             .WithOpenApi();
         }
-        
     }
 
-    private static void AddQueries(WebApplication app, bool IsDevelopment, string EnviromentName)
+    private static void AddQueries(WebApplication app, bool isDevelopment, ConfigurationManager configuration, string enviromentName)
     {
-        if (IsDevelopment)
+        if (isDevelopment)
         {
             app.MapGet("/Widgets", async (HttpContext httpContext, IMediator mediator) =>
             {
@@ -40,7 +46,8 @@ public static class Endpoints
                 var rtn = result.Format();
                 return rtn;
             })
-             .WithName("CoreGetWidget")
+            .WithName("CoreGetWidget")
+            .WithTags(Tags.Demo)
             .WithOpenApi();
 
             app.MapGet("/ApiConsume", async (HttpContext httpContext, IMediator mediator) =>
@@ -49,7 +56,8 @@ public static class Endpoints
                 var rtn = result.Format();
                 return rtn;
             })
-             .WithName("ApiConsume")
+            .WithName("ApiConsume")
+            .WithTags(Tags.Demo)
             .WithOpenApi();
         }
 
