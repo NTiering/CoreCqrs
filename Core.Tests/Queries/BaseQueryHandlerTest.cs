@@ -54,7 +54,7 @@ public class BaseQueryHandlerTest
     // --------------    Helpers                -------------
     //  ----------------------------------------------------
 
-    private static IMediator Mediator => Substitute.For<IMediator>();
+
     private static ILogger<TestQuery.Query> Logger => Substitute.For<ILogger<TestQuery.Query>>();
 
     private static TestQuery.Query Query => new();
@@ -63,7 +63,7 @@ public class BaseQueryHandlerTest
     {
         public class Query : BaseQuery<Result> 
         { 
-            public string Input { get;  } = Guid.NewGuid().ToString();
+            public string Input { get; } = Guid.NewGuid().ToString();
         }
         public class Result : BaseQueryResult
         {
